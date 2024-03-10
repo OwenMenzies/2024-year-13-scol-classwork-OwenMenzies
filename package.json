@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "create-react-app": "^1.2.1",
+    "openai": "^4.0.0"
+    
+  }
+  
+}
