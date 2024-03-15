@@ -3,7 +3,11 @@ import readline from 'readline';
 
 const openai = new OpenAI();
 var i = 0;
-const history = new Array()
+const history = new Array("banana","apple","orange");
+var messTextBase = "Hello Chatgpt, please respond with 2-3 sentance responses. You have been asked '";
+var messText = "";
+var j = 0;
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -31,11 +35,16 @@ async function askQuestion() {
   if (userInput !== '0') {
     console.log(`You asked: ${userInput}\nNow await your response from the divine`);
     history[i] = userInput;
-    i = i+1 
-    console.log(history)
+    i = i+1;
+    console.log(history);
+    messText = messTextBase;
+    for (j=0; j < history.length; j++){
+      messText = messText+history[j] + ", "
+      console.log(messText)
+      }
     // Call the OpenAI API after getting user input
     const answer = await callgpt(userInput);
-    
+    // return
     console.log(answer);
 
     // Ask the next question
