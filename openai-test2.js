@@ -7,6 +7,7 @@ const history = new Array();
 var messTextBase = "\u001b[34mHello Chatgpt, please respond with 2-3 sentence responses. You have been asked '";
 var messText = "";
 var j = 0;
+var k = 0;
 const responses = new Array();
 const rl = readline.createInterface({
   input: process.stdin,
@@ -38,23 +39,28 @@ async function askQuestion() {
     history[i] = userInput;
     i = i+1;
     
-    messText = messTextBase;
+    messText = messTextBase;    
     if (history.length!=0){
-    for (j=0; j < history.length; j++){
-      messText = messText+history[j] + ", "
+    for (j=0; j < history.length-1; j++){
+      messText = messText+history[j] + "', "
      
       }
     }
+
     if (responses.length!= 0) {
     messText = messText + "and have answered to each question the the answer of '"
     
-    for (j=0; j < (responses.length-1); j++){
-      messText = messText+responses[j] + "', '"
+    for (k=0; k < (responses.length-1); k++){
+      console.log(responses)
+      console.log(k)
+      messText = messText+responses[k] + "', '"
+     }
      
-      }
       messText = messText + "'"
+      messText = messText + ". Please anwser the current question of " + history[history.length-1]
       console.log(messText)
     }
+
     // Call the OpenAI API after getting user input
     const answer = await callgpt(userInput);
     // return
