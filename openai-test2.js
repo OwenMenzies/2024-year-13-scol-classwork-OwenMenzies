@@ -3,6 +3,7 @@ import readline from 'readline';
 
 const openai = new OpenAI();
 var i = 0;
+var runQuantity = 0;
 const history = new Array();
 var messTextBase = "\u001b[34mHello Chatgpt, please respond with 2-3 sentence responses. You have been asked '";
 var messText = "";
@@ -50,9 +51,10 @@ async function askQuestion() {
     if (responses.length!= 0) {
     messText = messText + "and have answered to each question the the answer of '"
     
-    for (k=0; k < (responses.length-1); k++){
+    for (k=0; k < (responses.length); k++){
       console.log(responses)
       console.log(k)
+      console.log("Hello")
       messText = messText+responses[k] + "', '"
      }
      
@@ -60,14 +62,18 @@ async function askQuestion() {
       messText = messText + ". Please anwser the current question of " + history[history.length-1]
       console.log(messText)
     }
+    if( runQuantity == 0) {
+      messText = userInput
 
+
+    }
     // Call the OpenAI API after getting user input
-    const answer = await callgpt(userInput);
+    const answer = await callgpt(messText);
     // return
     responses[i-1] = answer
     console.log(responses)
     console.log(answer);
-    
+    runQuantity ++
     // Ask the next question
     askQuestion();
   } else {
