@@ -55,10 +55,16 @@ async function askQuestion() {
       console.log(responses)
       console.log(k)
       console.log("Hello")
-      messText = messText+responses[k] + "', '"
+      messText ="'"+ messText+responses[k] 
+      if (k+1==responses.length){
+        
+        messText = messText+ "'"
      }
-     
-      messText = messText + "'"
+     else{
+      messText = messText + ", '"
+     }
+    }
+    
       messText = messText + ". Please anwser the current question of " + history[history.length-1]
       console.log(messText)
     }
