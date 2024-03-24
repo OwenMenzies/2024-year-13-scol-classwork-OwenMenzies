@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Base64 Image Encoder</title>
+</head>
+<body>
+
+  <input type="file" id="fileInput" accept="image/*">
+  <button onclick="encodeImage()">Encode Image</button>
+
+  <script>
+    function encodeImage() {
+      var fileInput = document.getElementById('fileInput');
+      var file = fileInput.files[0];
+
+      if (file) {
+        var reader = new FileReader();
+        
+        reader.onload = function(event) {
+          var base64String = event.target.result.split(',')[1]; // Extract base64 string from data URL
+          console.log(base64String);
+          // You can do something with the base64 encoded string here, like sending it to a server
+        };
+        
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+
+</body>
+</html>

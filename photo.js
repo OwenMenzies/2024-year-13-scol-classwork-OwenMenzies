@@ -13,6 +13,9 @@ async function convertImageToBase64(imagePath) {
   }
 }
 
+// Get the directory name using import.meta.url
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 // Path to the images folder
 const imagesFolder = path.join(__dirname, 'images');
 
