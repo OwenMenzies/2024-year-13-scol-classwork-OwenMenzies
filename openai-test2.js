@@ -56,6 +56,7 @@ async function askQuestion() {
       console.log(k)
       console.log("Hello")
       messText ="'"+ messText+responses[k] 
+      
       if (k+1==responses.length){
         
         messText = messText+ "'"

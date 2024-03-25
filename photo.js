@@ -1,7 +1,16 @@
 import fs from 'fs';
 import path from 'path';
-
+import readline from 'readline';
 // Function to convert image file to base64
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+const userInput = await new Promise(resolve => {
+  rl.question('What would you like to ask the almighty? (Enter "0" to exit): ', resolve);
+ 
+});
+console.log(userInput);
 async function convertImageToBase64(imagePath) {
   try {
     // Read the image file
@@ -17,7 +26,7 @@ async function convertImageToBase64(imagePath) {
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 // Path to the images folder
-const imagesFolder = path.join(__dirname, 'images');
+const imagesFolder = path.join(__dirname.replace(/^\/([a-z]):/i, '$1:'), 'images');
 
 // Read all files in the images folder
 fs.promises.readdir(imagesFolder)
