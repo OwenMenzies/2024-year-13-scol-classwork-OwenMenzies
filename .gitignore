@@ -130,3 +130,4 @@ dist
 .pnp.*
 chatgpt1.js
 openai-test.js
+primes.py
