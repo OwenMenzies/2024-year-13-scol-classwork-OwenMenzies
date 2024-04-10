@@ -1,6 +1,22 @@
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
+import OpenAI from "openai";
+
+const openai = new OpenAI();
+
+async function callgpt(question) {
+  // send and wait for a response from chatgpt
+  console.log(question)
+  const completion = await openai.chat.completions.create({
+    messages: [{ role: "system", content: "Greetings" }, { role: "user", content: question }],
+    model: "gpt-4-vision-preview",
+  });
+  // recieve the answer from chatgpt and return it 
+  const answer = completion.choices[0].message.content;
+  console.log(answer)
+  return answer;
+}
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -47,6 +63,7 @@ fs.promises.readdir(imagesFolder)
         try {
           const base64String = await convertImageToBase64(imagePath);
           console.log(`${selectedImage}: ${base64String}`);
+          callgpt(base64String)
         } catch (error) {
           console.error(`Error converting ${selectedImage} to base64:`, error);
         }

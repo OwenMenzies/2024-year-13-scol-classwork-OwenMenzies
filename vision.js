@@ -11,13 +11,24 @@ const history = new Array();
 // set up the prompt to chatgpt  
 var messTextBase = "\u001b[34mHello Chatgpt, please respond with 2-3 sentence responses. You have been asked 'what is this image? ";
 var messText = "";
+var img = "";
 const responses = new Array();
 // Set up the connection to the terminal
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
-
+async function callgpt(question) {
+  // send and wait for a response from chatgpt
+  const completion = await openai.chat.completions.create({
+    messages: [{ role: "system", content: "Greetings" }, { role: "user", content: question }],
+    model: "gpt-4",
+  });
+  // recieve the answer from chatgpt and return it 
+  const answer = completion.choices[0].message.content;
+  return answer;
+  
+}
 async function Base64Image() {
   const convertImageToBase64 = async (imagePath) => {
     try {
@@ -57,8 +68,9 @@ async function Base64Image() {
         try {
           const base64String = await convertImageToBase64(imagePath);
           console.log(`${selectedImage}: ${base64String}`);
+          global.img = base64String;
           
-          askQuestion(base64String); // Call askQuestion with base64 string
+          return base64String
         } catch (error) {
           console.error(`Error converting ${selectedImage} to base64:`, error);
         }
@@ -72,8 +84,9 @@ async function Base64Image() {
 }
 
 // Call Base64Image and initiate the process
-Base64Image();
-
+img = await Base64Image();
+console.log(img)
+askQuestion(img); // Call askQuestion with base64 string
 // Create the API function 
 async function callgpt(question) {
   try {
