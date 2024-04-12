@@ -9,8 +9,27 @@ async function callgpt(question) {
   // send and wait for a response from chatgpt
   console.log(question)
   const completion = await openai.chat.completions.create({
-    messages: [{ role: "system", content: "Greetings" }, { role: "user", content: question }],
-    model: "gpt-4-vision-preview",
+    model: "gpt-4-turbo",
+    messages: [
+      {
+        role: "user",
+        content: [
+          { type: "text", text: "What are in these images? Is there any difference between them?" },
+          {
+            type: "image_url",
+            image_url: {
+              "url": "data:image/jpeg;base64,{question}",
+            },
+          },
+          {
+            type: "image_url",
+            image_url: {
+              "url": "data:image/jpeg;base64,{question}",
+            },
+          }
+        ],
+      },
+    ],
   });
   // recieve the answer from chatgpt and return it 
   const answer = completion.choices[0].message.content;
