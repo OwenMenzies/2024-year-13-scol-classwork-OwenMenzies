@@ -4,6 +4,9 @@ import readline from 'readline';
 import OpenAI, { OpenAIError } from "openai";
 
 const openai = new OpenAI();
+const history = new Array();
+var frame = 0;
+
 
 async function callgpt(question,base64Image) {
   // send and wait for a response from chatgpt
@@ -28,6 +31,7 @@ async function callgpt(question,base64Image) {
       }
     ],
     "max_tokens": 300
+
   });
   
   
@@ -96,16 +100,36 @@ fs.promises.readdir(imagesFolder)
   console.error('Error reading images folder:', error);
 });
 
-
-async function askQuestion(base64String) {  
-    const quesiton = await new Promise(resolve => {
+async function genQuesiton(){
+    frame += 1;
+    const newQuesiton = await new Promise(resolve => {
         rl.question('What would you like to ask the almighty? (Enter "0" to exit): ', resolve);
     
     });
-    if (quesiton == "0") {
-        rl.close()
+
+    if (newQuesiton == "0") {
+        rl.close();
 
     }
-    await callgpt(quesiton,base64String)
+    if (frame != 1){
+        
+
+    }
+    else {
+        quesiton = newQuesiton;
+
+    }
+    console.log(frame)
+    return quesiton;
+
+}
+
+
+async function askQuestion(base64String) {  
+    const quesiton = await genQuesiton()
+
+    
+    await callgpt(quesiton,base64String);
     askQuestion(base64String)
+    
 }
