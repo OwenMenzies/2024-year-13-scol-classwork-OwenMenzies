@@ -1,11 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
-import OpenAI, { OpenAIError } from "openai";
+import OpenAI from "openai";
 
 const openai = new OpenAI();
-const history = new Array();
+const questions = new Array();
+const responses = new Array();
 var frame = 0;
+var messTextBase = "Hello Chatgpt, please respond with 2-3 sentence responses. You have been asked '";
+var messText = ""
+
 
 
 async function callgpt(question,base64Image) {
@@ -37,7 +41,8 @@ async function callgpt(question,base64Image) {
   
   // recieve the answer from chatgpt and return it 
   const answer = completion.choices[0].message.content;
-  console.log(answer)
+  console.log("\x1b[36m%s\x1b[0m"+answer)
+  responses.push(answer)
   return answer;
 }
 
@@ -102,25 +107,34 @@ fs.promises.readdir(imagesFolder)
 
 async function genQuesiton(){
     frame += 1;
-    const newQuesiton = await new Promise(resolve => {
+    const userQuesiton = await new Promise(resolve => {
         rl.question('What would you like to ask the almighty? (Enter "0" to exit): ', resolve);
-    
+        
     });
+    questions.push(userQuesiton)
+    if (userQuesiton == "0") {
+      rl.close();
 
-    if (newQuesiton == "0") {
-        rl.close();
 
     }
     if (frame != 1){
-        
+      messText = messTextBase;
+      for (var i=0; i < questions.length-1; i++){
+        messText = messText+questions[i] + ","
+      }
+      messText = messText + "' and have answered each with "
+      for (var j=0; j < responses.length; j++){
+        messText = messText+responses[j] 
+      }
+      messText = messText + " Please answer the current question of " +userQuesiton
 
     }
     else {
-        quesiton = newQuesiton;
+      messText = userQuesiton;
 
     }
-    console.log(frame)
-    return quesiton;
+    console.log("\u001b[34m"+messText)
+    return messText;
 
 }
 
