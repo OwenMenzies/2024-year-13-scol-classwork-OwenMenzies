@@ -11,6 +11,23 @@ var messTextBase = "Hello Chatgpt, please respond with 2-3 sentence responses. Y
 var messText = ""
 
 
+const speechFile = path.resolve("./speech.mp3");
+
+async function audio(text) {
+  
+  const mp3 = await openai.audio.speech.create({
+    model: "tts-1",
+    voice: "alloy",
+    input: `${text}`,
+  });
+
+  console.log(speechFile);
+  const buffer = Buffer.from(await mp3.arrayBuffer());
+  await fs.promises.writeFile(speechFile, buffer);
+}
+
+
+
 
 async function callgpt(question,base64Image) {
   // send and wait for a response from chatgpt
@@ -43,6 +60,7 @@ async function callgpt(question,base64Image) {
   const answer = completion.choices[0].message.content;
   console.log("\x1b[36m%s\x1b[0m"+answer)
   responses.push(answer)
+  audio(answer)
   return answer;
 }
 
