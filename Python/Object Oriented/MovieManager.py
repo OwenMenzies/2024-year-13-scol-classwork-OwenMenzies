@@ -83,6 +83,9 @@ def displayAll():
 
 # display the movies in a neat fashion
 
+# imediately display the entire table 
+displayAllTable()
+
 def updateMovie():
     print("What movie would you like to update?")
     for i in range(len(movieList)):
@@ -168,10 +171,42 @@ def deleteMovie():
             print(movieList[selectedMovie].getName(),"has not been deleted")
         else:
             print("Please enter either 1 (yes) or 2 (no)")
-# imediately display the entire table 
-displayAllTable()
 
-     
+
+
+            
+def addMovie():
+    progress = 1
+    run = True
+    while run == True:
+        if progress == 1:
+            name = input("What is the name of the movie?")
+            print("Are you sure the movie is called",name+"? (1 for yes, 2 for no, 3 to cancel addition)")
+            confirm = input()
+            if confirm == "1":
+                progress += 1
+            elif confirm == "3":
+                return
+            
+        if progress == 2:
+            print("Which theater will",name,"be held in? (1 for for Hi Vis Jacket (80 seats), 2 for Ladder and Clipboard (120 seats), 3 for Long Trenchcoat (200 seats))")
+            theaterId = errorChecker(1,3,"int")-1
+            theater = theaterCap[theaterId][1]
+            print("Are you sure",name,"is in", theater + "? (1 for yes, 2 for no, 3 to cancel addition)")
+            confirm = input()
+            if confirm == "1":
+                run = False
+            elif confirm == "3":
+                return
+    # generate the item in the class
+    # "SELECT MovieID,MovieName,MovieSeatsLeft,TheaterName ,Theater.TheaterID
+    movieId = movieList[-1].getId()+1
+
+
+    movie(movieId,name,theaterCap[theaterId][2],theaterCap[theaterId][1],theaterId+1)
+    movieList[-1].movieAdd()
+    # print(movieId,name,theaterCap[theaterId][2],theaterCap[theaterId][1],theaterId+1)
+       
             
 
 
