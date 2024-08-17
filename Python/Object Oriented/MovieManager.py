@@ -83,6 +83,62 @@ def displayAll():
 
 # display the movies in a neat fashion
 
+def updateMovie():
+    print("What movie would you like to update?")
+    for i in range(len(movieList)):
+        
+        print(f" {str(i+1):2} {movieList[i].getName():30} {movieList[i].getSeats():3}")
+
+
+    selectedMovie = errorChecker(1,len(movieList), "int") -1
+    print("You have chosen",movieList[selectedMovie].getName())
+
+    print("Would you like to change its name (1) or update the amount of seats (2)?")
+    
+    selectedEdit = errorChecker(1,2, "int")
+    
+    if selectedEdit == 1:
+        
+        run = True
+        while run == True:
+            
+            newName = input("What would you like to change the name to?")
+            print("Are you sure you would like to change",movieList[selectedMovie].getName(),"to",newName+"? (type 1 for yes, 2 for no)")
+            confirm = input()
+            
+            if confirm == "1":
+                run = False
+                movieList[selectedMovie].changeName(newName)
+            
+            elif confirm == "2":
+                run = False
+
+    elif selectedEdit ==2:
+        print("Currently there are " + str(movieList[selectedMovie].getSeats()),"how many would you like to remove? (negative to add)")
+        
+        run = True
+        while run == True:
+            try:
+                     
+                removeSeats = int(input())
+            
+                if movieList[selectedMovie].getSeats() - removeSeats > theaterCap[movieList[selectedMovie].getTheaterId()-1][2]:
+                    print(movieList[selectedMovie].getTheater(),"is only able to hold",theaterCap[movieList[selectedMovie].getTheaterId()-1][2],
+                          "seats, please add a amount of seats that would keep it below its limit")
+                
+                elif movieList[selectedMovie].getSeats() - removeSeats <0:
+
+                    print("The maximum this movie can sell is",str(movieList[selectedMovie].getSeats())+". Please enter a value that would not oversell the theater")
+               
+                else:
+                    run = False
+                    movieList[selectedMovie].decreaseSeats(removeSeats)
+                    print(movieList[selectedMovie].getName(),"currently has",movieList[selectedMovie].getSeats(),"avalible seats")
+           
+            except ValueError:
+                print("Please enter a valid integer")
+        
+   
 
 # imediately display the entire table 
 displayAllTable()
@@ -96,8 +152,8 @@ while True:
     userInput = input("What would you like to run? \n1. Display all the movies \n2. Update seats \n3. Delete a movie \n4. Add a movie \n5.  ")
     if userInput == "1":
         displayAllTable()
-    # elif userInput == "2":
-    #     updateMovie()
+    elif userInput == "2":
+        updateMovie()
     # elif userInput == "3":
     #     deleteMovie()
     # elif userInput == "4":
