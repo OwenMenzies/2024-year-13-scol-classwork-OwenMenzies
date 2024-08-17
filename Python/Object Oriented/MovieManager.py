@@ -38,6 +38,37 @@ class movie ():
         return self._theater
     def getTheaterId(self):
         return self._theaterId
+    
+    def decreaseSeats(self, quantity):
+        query = str("UPDATE MovieIndex set MovieSeatsLeft = '"+ str(self._seats - quantity)+"' where MovieID == "+str(self._id))
+        cursor.execute(query)
+        self._seats -= quantity
+        connection.commit()
+
+    def changeName(self,newName):
+        query = str("UPDATE MovieIndex set MovieName = '"+newName+"' where MovieID == "+str(self._id))
+        cursor.execute(query)
+        connection.commit()
+        # print(query)
+        self._name = newName
+        # query = "SELECT MovieID,MovieName,MovieSeatsLeft,TheaterName ,Theater.TheaterID FROM MovieIndex INNER JOIN Theater ON MovieIndex.MovieTheaterID = Theater.TheaterID"
+        # cursor.execute(query)
+        
+        # results = cursor.fetchall()
+        # print(results)
+    def deleteMovieDB(self):
+        
+        query = "DELETE FROM MovieIndex WHERE MovieID ="+str(self._id)
+        cursor.execute(query)
+        connection.commit()
+
+    def movieAdd(self):
+        
+        query = "INSERT INTO MovieIndex VALUES ("+str(self._id)+", '"+self._name+"', "+str(self._seats)+", "+str(self._theaterId)+");"
+        print(query)
+        cursor.execute(query)
+        connection.commit()
+
 
 
 # execute setup query
