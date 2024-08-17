@@ -6,7 +6,7 @@ DATABASE = 'MovieManager.db'
 connection = sqlite3.connect(DATABASE)
 cursor = connection.cursor()
 movieList = []
-# create the class of movie
+
 query = "SELECT TheaterID, TheaterName, TheaterSeats FROM Theater ORDER BY TheaterID"
 cursor.execute(query)
 theaterCap = []
@@ -15,7 +15,7 @@ results = cursor.fetchall()
 for i in results:
     theaterCap.append([i[0],i[1],i[2]])
     
-
+# create the class of movie with an ID, name, seats left, theater name and ID
 class movie ():
     # initize the class 
     def __init__ (self,MovieID,MovieName,MovieSeatsLeft,TheaterName,TheaterID):
@@ -39,23 +39,22 @@ class movie ():
     def getTheaterId(self):
         return self._theaterId
     
+    # decrease the seats quantity in both the object and the database 
     def decreaseSeats(self, quantity):
         query = str("UPDATE MovieIndex set MovieSeatsLeft = '"+ str(self._seats - quantity)+"' where MovieID == "+str(self._id))
         cursor.execute(query)
         self._seats -= quantity
         connection.commit()
 
+    # change the name in both the database and the movie list
     def changeName(self,newName):
         query = str("UPDATE MovieIndex set MovieName = '"+newName+"' where MovieID == "+str(self._id))
         cursor.execute(query)
         connection.commit()
-        # print(query)
+    
         self._name = newName
-        # query = "SELECT MovieID,MovieName,MovieSeatsLeft,TheaterName ,Theater.TheaterID FROM MovieIndex INNER JOIN Theater ON MovieIndex.MovieTheaterID = Theater.TheaterID"
-        # cursor.execute(query)
-        
-        # results = cursor.fetchall()
-        # print(results)
+     
+    # 
     def deleteMovieDB(self):
         
         query = "DELETE FROM MovieIndex WHERE MovieID ="+str(self._id)
@@ -116,7 +115,7 @@ def displayAll():
 
 # imediately display the entire table 
 displayAllTable()
-
+'''This function updates movies names and seats'''
 def updateMovie():
     print("What movie would you like to update?")
     for i in range(len(movieList)):
@@ -174,7 +173,7 @@ def updateMovie():
         
    
 
-
+'''This function deletes movies from the movie list'''
 def deleteMovie():
     print("What movie would you like to delete?")
     for i in range(len(movieList)):
@@ -205,7 +204,7 @@ def deleteMovie():
 
 
 
-            
+'''This function adds a movie to the movie list'''
 def addMovie():
     progress = 1
     run = True
@@ -248,9 +247,9 @@ while True:
         displayAllTable()
     elif userInput == "2":
         updateMovie()
-    # elif userInput == "3":
-    #     deleteMovie()
-    # elif userInput == "4":
-    #     addMovie()
-    # elif userInput == "5":
-    #     pass
+    elif userInput == "3":
+        deleteMovie()
+    elif userInput == "4":
+        addMovie()
+    elif userInput == "5":
+        pass
