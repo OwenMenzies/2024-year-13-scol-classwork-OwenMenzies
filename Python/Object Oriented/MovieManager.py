@@ -140,6 +140,34 @@ def updateMovie():
         
    
 
+
+def deleteMovie():
+    print("What movie would you like to delete?")
+    for i in range(len(movieList)):
+     
+        print(f" {str(i+1):>2} {movieList[i].getName():30} {movieList[i].getSeats():3}")
+    
+    selectedMovie = errorChecker(1,len(movieList), "int") -1
+    print("You have chosen",movieList[selectedMovie].getName())
+    
+    print("Are you sure you would like to delete",movieList[selectedMovie].getName()+"? (type 1 for yes, 2 for no)")
+    run = True
+    while run == True:
+        
+        confirm = input()
+        
+        if confirm in "1 yes Yes":
+            run = False
+            print(movieList[selectedMovie].getName(),"was deleted")
+            movieList[selectedMovie].deleteMovieDB()
+            movieList.pop(selectedMovie)
+            
+          
+        elif confirm in "2 no No":
+            run = False
+            print(movieList[selectedMovie].getName(),"has not been deleted")
+        else:
+            print("Please enter either 1 (yes) or 2 (no)")
 # imediately display the entire table 
 displayAllTable()
 
