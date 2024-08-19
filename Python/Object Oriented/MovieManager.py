@@ -16,16 +16,7 @@ results = cursor.fetchall()
 for i in results:
     theater_cap.append([i[0], i[1], i[2]])
 
-def theaterChoser():
-        while True:
-            print(f"Which theater would you like to log in to? (1 for Hi Vis Jacket (80 seats), 2 for Ladder and Clipboard (120 seats), 3 for Long Trenchcoat (200 seats))")
-            theater_id = error_checker(1, 3, "int") - 1
-            theater = theater_cap[theater_id][1]
-            print(f"Are you sure you would like to log in to {theater}? (1 for yes, 2 for no")
-            confirm = input()
-            if confirm == "1":
-                return theater
-theater = theaterChoser()
+
 # Create the class of movie with an ID, name, seats left, theater name, and ID
 class movie:
     # Initialize the class
@@ -98,7 +89,10 @@ for result in results:
     movie(result[0], result[1], result[2], result[3], result[4],result[5],result[6])
     test = [result[0], result[1], result[2], result[3], result[4]]
 
-def error_checker(lower, upper, data_type):
+
+
+def error_checker(lower=0, upper=0, data_type="int"):
+
     while True:
         if data_type == "int":
             try:
@@ -111,15 +105,53 @@ def error_checker(lower, upper, data_type):
                 print(f"Please enter an integer between {lower} and {upper}")
 
 
+        if data_type == "float":
+            try:
+                value = float(input())
+                if lower <= value <= upper:
+                    return value
+                else:
+                    print(f"Please enter an number between {lower} and {upper}")
+            except ValueError:
+                print(f"Please enter an number between {lower} and {upper}")
+
+        if data_type == "time":
+            hours,minutes = input().split(":")
+            hours=  int(hours)
+            minutes =int(minutes)
+            print (hours,minutes)
+            print(hours*60+minutes)
+            if hours >= 0 and hours <24 and minutes >=0 and minutes <=59:
+                print(hours,"gooder times")
+                return hours*60+minutes
+            # if :
+            #     print(minutes,"good times")
+            else:
+                print("Please enter a valid time") 
+
+def theaterChoser():
+        while True:
+            print(f"Which theater would you like to log in to? (1 for Hi Vis Jacket (80 seats), 2 for Ladder and Clipboard (120 seats), 3 for Long Trenchcoat (200 seats))")
+            theater_id = error_checker(1, 3, "int") - 1
+            theater = theater_cap[theater_id][1]
+            print(f"Are you sure you would like to log in to {theater}? (1 for yes, 2 for no)")
+            confirm = input()
+            if confirm == "1":
+                return theater
+
+
+def print_time(minutes_after_midnight):
+    return (str(minutes_after_midnight//60)+":"+str(minutes_after_midnight%60))
+
 # Display every movie in a table format
 def display_all_table():
-    print("Movie number - Movie name    -    Seats left")
+    print("Movie number - Movie name    -    Seats left     -    Price       -    Showing time")
     for i in range(len(movie_list)):
         if movie_list[i].get_theater() == theater:
-            print(f"{i + 1:3}  {(movie_list[i].get_name()):30} {(movie_list[i].get_seats()):3}")
+            print(f"{i + 1:3}  {(movie_list[i].get_name()):30} {(movie_list[i].get_seats()):3} {(movie_list[i].get_price()):3} {(movie_list[i].get_time()):3}")
 
 
-
+theater = theaterChoser()
 # Immediately display the entire table 
 display_all_table()
 
@@ -196,23 +228,37 @@ def add_movie():
     while run:
         if progress == 1:
 
-            name = input("What is the name of the movie?")
-            print(f"Are you sure the movie is called {name}? (1 for yes, 2 for no, 3 to cancel addition)")
+            movie_name = input("What is the name of the movie?")
+            print(f"Are you sure the movie is called {movie_name}? (1 for yes, 2 for no, 3 to cancel addition)")
+            confirm = input()
+            if confirm == "1":
+                progress += 1
+            elif confirm == "3":
+                return
+        if progress == 2:
+            print("What is the price of the movie?")
+            movie_price = error_checker(0,100000,"float")
+            print(f"Are you sure that {movie_name} will have a price of {movie_price}? (1 for yes, 2 for no, 3 to cancel addition)")
+            confirm = input()
+            if confirm == "1":
+                progress += 1
+            elif confirm == "3":
+                return
+        if progress == 3:
+            print(f"What time would you like {movie_name}to be shown at? (Enter time in 23:59 format)")
+            minutes_after_midnight = error_checker(data_type="time")
+            print(f"Are you sure that {movie_name} will be shown at {print_time(minutes_after_midnight)}? (1 for yes, 2 for no, 3 to cancel addition)")
             confirm = input()
             if confirm == "1":
                 run = False
             elif confirm == "3":
                 return
-        if progress == 2:
-            print("What is the price of the movie?")
-            price = error_checker(0,1000,"int")
-        
 
       
 
     # Generate the item in the class
     movie_id = movie_list[-1].get_id() + 1
-    movie(movie_id, name, theater_cap[theater][2], theater_cap[theater][1], theater + 1,)
+    movie(movie_id, movie_name, theater_cap[theater][2], theater_cap[theater][1], theater + 1, movie_price, minutes_after_midnight )
     movie_list[-1].add_movie()
 
 # Main run time organizer
