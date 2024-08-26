@@ -137,7 +137,7 @@ def theaterChoser():
             print(f"Are you sure you would like to log in to {theater}? (1 for yes, 2 for no)")
             confirm = input()
             if confirm == "1":
-                return theater
+                return theater, theater_id+1
 
 
 def print_time(minutes_after_midnight):
@@ -145,21 +145,27 @@ def print_time(minutes_after_midnight):
 
 # Display every movie in a table format
 def display_all_table():
-    print("Movie number - Movie name    -    Seats left     -    Price       -    Showing time")
+    j = 0
+    print("Movie number - Movie name    -    Seats left - Price - Showing time")
     for i in range(len(movie_list)):
+        j += 1
         if movie_list[i].get_theater() == theater:
-            print(f"{i + 1:3}  {(movie_list[i].get_name()):30} {(movie_list[i].get_seats()):3} {(movie_list[i].get_price()):3} {(movie_list[i].get_time()):3}")
+            print(f"{j:3}  {(movie_list[i].get_name()):30} {(movie_list[i].get_seats()):3} {(movie_list[i].get_price()):10} {(movie_list[i].get_time()):10}")
 
 
-theater = theaterChoser()
+theater, theater_id = theaterChoser()
 # Immediately display the entire table 
 display_all_table()
 
 # Function to update movies' names and seats
 def update_movie():
     print("What movie would you like to update?")
+    display_all_table()
+    j = 0
     for i in range(len(movie_list)):
-        print(f" {str(i + 1):2} {movie_list[i].get_name():30} {movie_list[i].get_seats():3}")
+        if movie_list[i].get_theater_id() == theater_id:
+            j+=1 
+            print(f" {str(j):2} {movie_list[i].get_name():30} {movie_list[i].get_seats():3}")
 
     selected_movie = error_checker(1, len(movie_list), "int") - 1
     print("You have chosen", movie_list[selected_movie].get_name())
