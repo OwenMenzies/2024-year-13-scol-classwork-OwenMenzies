@@ -161,16 +161,16 @@ display_all_table()
 def update_movie():
     print("What movie would you like to update?")
     display_all_table()
-    j = 0
-    for i in range(len(movie_list)):
-        if movie_list[i].get_theater_id() == theater_id:
-            j+=1 
-            print(f" {str(j):2} {movie_list[i].get_name():30} {movie_list[i].get_seats():3}")
+    # j = 0
+    # for i in range(len(movie_list)):
+    #     if movie_list[i].get_theater_id() == theater_id:
+    #         j+=1 
+    #         print(f" {str(j):2} {movie_list[i].get_name():30} {movie_list[i].get_seats():3}")
 
     selected_movie = error_checker(1, len(movie_list), "int") - 1
     print("You have chosen", movie_list[selected_movie].get_name())
 
-    print("Would you like to change its name (1) or update the amount of seats (2)?")
+    print("Would you like to change its name (1) or update the price (2) por update the viewing time (3)?")
     selected_edit = error_checker(1, 2, "int")
 
     if selected_edit == 1:
@@ -206,9 +206,7 @@ def update_movie():
 # Function to delete movies from the movie list
 def delete_movie():
     print("What movie would you like to delete?")
-    for i in range(len(movie_list)):
-        print(f" {str(i + 1):>2} {movie_list[i].get_name():30} {movie_list[i].get_seats():3}")
-
+    display_all_table()
     selected_movie = error_checker(1, len(movie_list), "int") - 1
     print("You have chosen", movie_list[selected_movie].get_name())
 
@@ -266,6 +264,28 @@ def add_movie():
     movie_id = movie_list[-1].get_id() + 1
     movie(movie_id, movie_name, theater_cap[theater][2], theater_cap[theater][1], theater + 1, movie_price, minutes_after_midnight )
     movie_list[-1].add_movie()
+
+
+def add_sales():
+    display_all_table()
+    print("What movie would you like to create a sale for?")
+    selected_movie = error_checker(1, len(movie_list), "int") - 1
+    print(f"Currently there are {movie_list[selected_movie].get_seats()}, how many would you like to remove? (negative to add)")
+    run = True
+    while run:
+        try:
+            remove_seats = int(input())
+            if movie_list[selected_movie].get_seats() - remove_seats > theater_cap[movie_list[selected_movie].get_theater_id() - 1][2]:
+                print(f"{theater} is only able to hold {theater_cap[movie_list[selected_movie].get_theater_id() - 1][2]} seats, please add an amount of seats that would keep it below its limit")
+            elif movie_list[selected_movie].get_seats() - remove_seats < 0:
+                print(f"The maximum this movie can sell is {movie_list[selected_movie].get_seats()}. Please enter a value that would not oversell the theater")
+            else:
+                run = False
+                movie_list[selected_movie].decrease_seats(remove_seats)
+                print(f"{movie_list[selected_movie].get_name()} currently has {movie_list[selected_movie].get_seats()} available seats")
+        except ValueError:
+            print("Please enter a valid integer")
+    
 
 # Main run time organizer
 while True:
