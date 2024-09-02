@@ -58,7 +58,7 @@ async function callgpt(question,base64Image) {
   
   // recieve the answer from chatgpt and return it 
   const answer = completion.choices[0].message.content;
-  console.log("\x1b[36m%s\x1b[0m"+answer)
+  console.log("\x1b[36m%s\x1b[0m",answer)
   responses.push(answer)
   audio(answer)
   return answer;
@@ -151,7 +151,7 @@ async function genQuesiton(){
       messText = userQuesiton;
 
     }
-    console.log("\u001b[34m"+messText)
+    // console.log("\u001b[34m"+messText)
     return messText;
 
 }
