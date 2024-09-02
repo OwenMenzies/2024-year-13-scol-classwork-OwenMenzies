@@ -250,7 +250,8 @@ def add_movie():
             print(f"Are you sure the movie is called {movie_name}? (1 for yes, 2 for no, 3 to cancel addition)")
             confirm = input()
             if confirm == "1":
-                progress += 1
+                progress -= -1 
+                
             elif confirm == "3":
                 return
         if progress == 2:
@@ -259,7 +260,7 @@ def add_movie():
             print(f"Are you sure that {movie_name} will have a price of {movie_price}? (1 for yes, 2 for no, 3 to cancel addition)")
             confirm = input()
             if confirm == "1":
-                progress += 1
+                progress -= -1
             elif confirm == "3":
                 return
         if progress == 3:
