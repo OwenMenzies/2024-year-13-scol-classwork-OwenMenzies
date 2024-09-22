@@ -7,12 +7,12 @@ DATABASE = 'MovieManager.db'
 connection = sqlite3.connect(DATABASE)
 cursor = connection.cursor()
 movie_list = []
-
+# send an initial query to attain theater data
 query = "SELECT TheaterID, TheaterName, TheaterSeats FROM Theater ORDER BY TheaterID"
 cursor.execute(query)
 theater_cap = []
 results = cursor.fetchall()
-
+# create a list with theater data
 for i in results:
     theater_cap.append([i[0], i[1], i[2]])
 
@@ -80,21 +80,22 @@ class movie:
         cursor.execute(query)
         connection.commit()
 
-# Execute setup query
+# Execute movie query
 query = "SELECT MovieID,MovieName,MovieSeatsLeft,TheaterName,Theater.TheaterID,MoviePrice,MovieTime FROM MovieIndex INNER JOIN Theater ON MovieIndex.MovieTheaterID = Theater.TheaterID"
 cursor.execute(query)
 
 results = cursor.fetchall()
+# create movie objects 
 for result in results:
     movie(result[0], result[1], result[2], result[3], result[4],result[5],result[6])
-    test = [result[0], result[1], result[2], result[3], result[4]]
+    # test = [result[0], result[1], result[2], result[3], result[4]]
 
 
-
+#  create a universal error checker function
 def error_checker(lower=0, upper=0, data_type="int"):
-
+    # run until a valid input is recieved  
     while True:
-        
+        # check if the integer is above the minimum and below the maximum
         if data_type == "int":
             try:
                 value = int(input())
@@ -105,58 +106,62 @@ def error_checker(lower=0, upper=0, data_type="int"):
             except ValueError:
                 print(f"Please enter an integer between {lower} and {upper}")
 
-
+        # check if the number is above the minimum and below the maximum
         if data_type == "float":
             try:
                 value = float(input())
                 if lower <= value <= upper:
                     return value
                 else:
-                    print(f"Please enter an number between {lower} and {upper}")
+                    print(f"Please enter a number between {lower} and {upper}")
             except ValueError:
-                print(f"Please enter an number between {lower} and {upper}")
-
+                print(f"Please enter a number between {lower} and {upper}")
+        # check if the input is a valid time 
         if data_type == "time":
+            # split into hours and minutes
             hours,minutes = input().split(":")
-            hours=  int(hours)
-            minutes =int(minutes)
+            hours = int(hours)
+            minutes = int(minutes)
             print (hours,minutes)
             print(hours*60+minutes)
+            # check if time follows universal principles e.g. no 11:67 am
             if hours >= 0 and hours <24 and minutes >=0 and minutes <=59:
                 print(hours,"gooder times")
                 return hours*60+minutes
-            # if :
-            #     print(minutes,"good times")
+        
             else:
                 print("Please enter a valid time") 
+        # check if the string is only spaces
         if data_type == "string":
             string = input()
            
             for i in string:
                 if i.isspace == False:
                     non_space = True
-            pass
-
+            
+# allow the user to chose a theater to log in to
 def theaterChoser():
         while True:
             print(f"Which theater would you like to log in to? (1 for Hi Vis Jacket (80 seats), 2 for Ladder and Clipboard (120 seats), 3 for Long Trenchcoat (200 seats))")
+            # receive the input from the user and asign it to the desired theater
             theater_id = error_checker(1, 3, "int") - 1
             theater = theater_cap[theater_id][1]
+            # confirm with user if the chosen theater is correct
             print(f"Are you sure you would like to log in to {theater}? (1 for yes, 2 for no)")
             confirm = input()
             if confirm == "1":
                 return theater, theater_id+1
 
-
+# print the time in standard form
 def print_time(minutes_after_midnight):
     return (str(minutes_after_midnight//60)+":"+str(minutes_after_midnight%60))
 
 # Display every movie in a table format
-
-def display_all_table():
+def display_all_table():\
+    # allow other functions to access the printed movies list 
     global printed_movies 
     printed_movies = []
-   
+    # print every movie which is being shown at the desired theater and append it to a list 
     print("Movie number - Movie name    -    Seats left - Price - Showing time")
     for i in range(len(movie_list)):
         
