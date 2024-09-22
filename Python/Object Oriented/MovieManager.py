@@ -12,6 +12,8 @@ query = "SELECT TheaterID, TheaterName, TheaterSeats FROM Theater ORDER BY Theat
 cursor.execute(query)
 theater_cap = []
 results = cursor.fetchall()
+
+deleted = 0
 # create a list with theater data
 for i in results:
     theater_cap.append([i[0], i[1], i[2]])
@@ -28,6 +30,7 @@ class movie:
         self._theater_id = theater_id
         self._movie_price = movie_price
         self._movie_time = movie_time
+        self._position = len(movie_list)
         movie_list.append(self)
 
     # Return the individual items
@@ -51,6 +54,9 @@ class movie:
 
     def get_time(self):
         return self._movie_time
+
+    def get_position(self):
+        return self._position
 
     # Decrease the seats quantity in both the object and the database
     def decrease_seats(self, quantity):
@@ -140,7 +146,7 @@ def error_checker(lower=0, upper=0, data_type="int"):
                     non_space = True
             
 # allow the user to chose a theater to log in to
-def theaterChoser():
+def theater_choser():
         while True:
             print(f"Which theater would you like to log in to? (1 for Hi Vis Jacket (80 seats), 2 for Ladder and Clipboard (120 seats), 3 for Long Trenchcoat (200 seats))")
             # receive the input from the user and asign it to the desired theater
@@ -157,7 +163,7 @@ def print_time(minutes_after_midnight):
     return (str(minutes_after_midnight//60)+":"+str(minutes_after_midnight%60))
 
 # Display every movie in a table format
-def display_all_table():\
+def display_all_table(deleted):
     # allow other functions to access the printed movies list 
     global printed_movies 
     printed_movies = []
@@ -168,18 +174,24 @@ def display_all_table():\
         if movie_list[i].get_theater() == theater:
             
             print(f"{len(printed_movies)+1:3}  {(movie_list[i].get_name()):30} {(movie_list[i].get_seats()):3} {(movie_list[i].get_price()):10} {(print_time(movie_list[i].get_time())):10}")
-            printed_movies.append(movie_list[i].get_id()-1)
-            
+            printed_movies.append(movie_list[i].get_position()-deleted)
+
+
+def print_all():
+    print("Movie number - Movie name    -    Seats left - Price - Showing time")
+    for i in range(len(movie_list)):
+        print(f"{len(printed_movies)+1:3}  {(movie_list[i].get_name()):30} {(movie_list[i].get_seats()):3} {(movie_list[i].get_price()):10} {(print_time(movie_list[i].get_time())):10}")
+    
             
 
-theater, theater_id = theaterChoser()
+theater, theater_id = theater_choser()
 # Immediately display the entire table 
-display_all_table()
+display_all_table(deleted)
 
 # Function to update movies' names and seats
 def update_movie():
     print("What movie would you like to update?")
-    display_all_table()
+    display_all_table(deleted)
     # j = 0
     # for i in range(len(movie_list)):
     #     if movie_list[i].get_theater_id() == theater_id:
@@ -223,11 +235,16 @@ def update_movie():
                 print("Please enter a valid integer")
 
 # Function to delete movies from the movie list
-def delete_movie():
-    print("What movie would you like to delete?")
-    display_all_table()
-    selected_movie = error_checker(1, len(movie_list), "int") - 1
-    print("You have chosen", movie_list[selected_movie].get_name())
+def delete_movie(deleted):
+    print("What movie would you like to delete? 0 to cancel")
+    display_all_table(deleted)
+    selected_movie = printed_movies[error_checker(0, len(movie_list), "int") - 1]
+    print(selected_movie)
+    print(printed_movies)
+    print_all()
+    if selected_movie == -1:
+        return
+    # print("You have chosen", movie_list[selected_movie].get_name())
 
     print(f"Are you sure you would like to delete {movie_list[selected_movie].get_name()}? (type 1 for yes, 2 for no)")
     run = True
@@ -238,6 +255,7 @@ def delete_movie():
             print(f"{movie_list[selected_movie].get_name()} was deleted")
             movie_list[selected_movie].delete_movie_db()
             movie_list.pop(selected_movie)
+            return deleted - 1
         elif confirm in "2 no No":
             run = False
             print(f"{movie_list[selected_movie].get_name()} has not been deleted")
@@ -265,7 +283,7 @@ def add_movie():
             print(f"Are you sure that {movie_name} will have a price of {movie_price}? (1 for yes, 2 for no, 3 to cancel addition)")
             confirm = input()
             if confirm == "1":
-                progress -= -1
+                progress -=- 1
             elif confirm == "3":
                 return
         if progress == 3:
@@ -286,19 +304,19 @@ def add_movie():
     movie_list[-1].add_movie()
 
 
-def add_sale():
+def add_sale(deleted):
 
-    display_all_table()
+    display_all_table(deleted)
     print("What movie would you like to create a sale for?")
 
     # selected_movie = error_checker(1, len(movie_list), "int") - 1
-    print((printed_movies))
-    print(error_checker(1, len(printed_movies), "int") -1 )
-    print(printed_movies[error_checker(1, len(printed_movies), "int") -1 ])
+    # print((printed_movies))
+    # print(error_checker(1, len(printed_movies), "int") -1 )
+    # print(printed_movies[error_checker(1, len(printed_movies), "int") -1 ])
     # print(selected_movie)
     selected_movie = printed_movies[error_checker(1, len(printed_movies), "int") -1 ]
-    print(printed_movies)
-    print(selected_movie)
+    # print(printed_movies)
+    # print(selected_movie)
     print(movie_list[selected_movie].get_name())
     print(f"Currently there are {movie_list[selected_movie].get_seats()}, how many would you like to remove? (negative to add)")
     run = True
@@ -326,15 +344,25 @@ def add_sale():
 
 # Main run time organizer
 while True:
-    user_input = input("What would you like to run? \n1. Display all the movies \n2. Update movie info \n3. Delete a movie \n4. Add a movie \n5. Add a sale \n")
-    if user_input == "1":
-        display_all_table()
-    elif user_input == "2":
-        update_movie()
-    elif user_input == "3":
-        delete_movie()
-    elif user_input == "4":
-        add_movie()
-    elif user_input == "5":
-        add_sale()
+    if len(printed_movies) == 0:
+        print("This theater currently has no movies, please add some or change theaters")
+        user_input = input("What would you like to run? \n1. Add a movie \n2. Change theater")
+        if user_input == "1":
+            add_movie(deleted)
+        elif user_input == "2":
+            theater, theater_id = theater_choser(deleted)
+    else:
+        user_input = input("What would you like to run? \n1. Display all the movies \n2. Update movie info \n3. Delete a movie \n4. Add a movie \n5. Add a sale \n6. Change theater")
+        if user_input == "1":
+            display_all_table(deleted)
+        elif user_input == "2":
+            update_movie(deleted)
+        elif user_input == "3":
+            deleted = delete_movie(deleted)
+        elif user_input == "4":
+            add_movie(deleted)
+        elif user_input == "5":
+            add_sale(deleted)
+        elif user_input == "6":
+            theater, theater_id = theater_choser()
         
