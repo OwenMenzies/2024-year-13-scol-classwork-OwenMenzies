@@ -18,13 +18,13 @@ async function callgpt(question) {
           {
             type: "image_url",
             image_url: {
-              "url": "data:image/jpeg;base64,{question}",
+              "url": `data:image/jpeg;base64,${question}`,
             },
           },
           {
             type: "image_url",
             image_url: {
-              "url": "data:image/jpeg;base64,{question}",
+              "url": `data:image/jpeg;base64,${question}`,
             },
           }
         ],

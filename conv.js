@@ -28,12 +28,11 @@ async function audio(text) {
 
 
 
-
 async function callgpt(question,base64Image) {
   // send and wait for a response from chatgpt
 //   console.log(question)
   const completion = await openai.chat.completions.create({
-    "model": "gpt-4-turbo",
+    "model": "gpt-4o-mini",
     "messages": [
       {
         "role": "user",
@@ -125,7 +124,7 @@ fs.promises.readdir(imagesFolder)
 
 async function genQuesiton(){
     frame += 1;
-    const userQuesiton = await new Promise(resolve => {
+    const userQuesiton = await new  Promise (resolve => {
         rl.question('What would you like to ask the almighty? (Enter "0" to exit): ', resolve);
         
     });
