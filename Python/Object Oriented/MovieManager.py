@@ -218,26 +218,31 @@ def update_movie():
     selected_movie = printed_movies[error_checker(1, len(printed_movies), "int") - 1] 
     print("You have chosen", movie_list[selected_movie].get_name())
 
-    # ask what the users wants to change
+    # ask_user what the users wants to change
     print("Would you like to change its name (1) or update the price (2) or update the viewing time (3)?")
     selected_edit = error_checker(1, 3, "int")
     # change the movie's name
-    run = True
-    while run == True:
+    user_updating_movie = True
+
+    while user_updating_movie == True:
         if selected_edit == 1:
             # loop until the user inputs a name they are happy with 
             while True:
                 new_name = input("What would you like to change the name to?")
-                ask = True
-                while ask:
+                ask_user = True
+                if new_name == "" or new_name.isspace() == True:
+                    print("Please enter a non whitespace name (" ")")
+                    continue
+                while ask_user:
                     print(f"Are you sure you would like to change {movie_list[selected_movie].get_name()} to {new_name}? (1 to confirm, 2 to change name, 3 to cancel)")
                     confirm = input()
+                  
                     # change the movie name and exit the function
                     if confirm == "1":
                         movie_list[selected_movie].change_name(new_name)
                         return
                     elif confirm == "2":
-                        ask = False
+                        ask_user = False
                     # cancel the change and exit the function 
                     elif confirm == "3":
                         return
@@ -249,8 +254,8 @@ def update_movie():
             # find the price of the movie, 100,000 is the limit for greedy managers
             movie_price = error_checker(0,100000,"float")
             # confirm the price and update the movie price if its correct
-            ask = True
-            while ask == True:
+            ask_user = True
+            while ask_user == True:
                 print(f"Are you sure that {movie_list[selected_movie].get_name()} will have a price of {movie_price:.2f}? (1 to confirm, 2 to change price, 3 to cancel)")
 
                 confirm = input()
@@ -258,7 +263,7 @@ def update_movie():
                     movie_list[selected_movie].update_price(movie_price)
                     return
                 elif confirm == "2":
-                    ask = False
+                    ask_user = False
                 # cancel the operation
                 elif confirm == "3":
                     return
@@ -271,15 +276,15 @@ def update_movie():
             minutes_after_midnight = error_checker(data_type="time")
 
             # check if the user inputs the correct time, and if so, update the database
-            ask = True
-            while ask == True:
+            ask_user_user = True
+            while ask_user_user == True:
                 print(f"Are you sure that {movie_list[selected_movie].get_name()} will be shown at {print_time(minutes_after_midnight)}? (1 to confirm, 2 to change time, 3 to cancel addition)")
                 confirm = input()
                 if confirm == "1":
                     movie_list[selected_movie].update_time(minutes_after_midnight)
                     return
                 if confirm == "2":
-                    ask = False
+                    ask_user_user = False
                 elif confirm == "3":
                     return
                 else: 
@@ -301,7 +306,8 @@ def delete_movie():
     
     
     # confirm the user wants to delete the chosen movie
-    while True:
+    using_deleting_movie = True
+    while using_deleting_movie == True:
         print(f"Are you sure you would like to delete {movie_list[selected_movie].get_name()}? (1 to confirm, 2 to change the movie, 3 to cancel deletion)")
         confirm = input()
         # delete the movie
@@ -310,7 +316,7 @@ def delete_movie():
             movie_list[selected_movie].delete_movie_db()
             movie_list.pop(selected_movie)
             
-            break 
+            using_deleting_movie = False 
             
         # inform the user that the movie was not deleted and return to main program manager
         elif confirm in "3":
@@ -340,17 +346,20 @@ def add_movie():
         if progress == 1:
             
             movie_name = input("What is the name of the movie?")
+            if movie_name == "" or movie_name.isspace() == True:
+                print("Please enter a non whitespace name (" ")")
+                continue
             # confirm if the movie name is correct
-            ask = True
-            while ask:
+            ask_user = True
+            while ask_user:
                 print(f"Are you sure the movie is called {movie_name}? (1 to confirm, 2 to change name, 3 to cancel addition)")
                 confirm = input()
-                # either advance the user, reask the quesiton, or end the program depending on what the user inputs
+                # either advance the user, reask_user the quesiton, or end the program depending on what the user inputs
                 if confirm == "1":
                     progress +=1
-                    ask = False
+                    ask_user = False
                 elif confirm == "2":
-                    ask = False
+                    ask_user = False
                 elif confirm == "3":
                     return
         # add the movie time
@@ -359,18 +368,18 @@ def add_movie():
             print("What is the price of the movie?")
             movie_price = error_checker(0,100000,"float")
             # confirm if the movie price is correct
-            ask = True
-            while ask == True:
+            ask_user = True
+            while ask_user == True:
                 print(f"Are you sure that {movie_name} will have a price of {movie_price:.2f}? (1 to confirm, 2 to change the price, 3 to cancel addition)")
                 
                 confirm = input()
-                # either advance the user, reask the quesiton, or end the program depending on what the user inputs
+                # either advance the user, reask_user the quesiton, or end the program depending on what the user inputs
 
                 if confirm == "1":
                     progress +=1
-                    ask = False
+                    ask_user = False
                 elif confirm == "2":
-                    ask = False
+                    ask_user = False
                 elif confirm == "3":
                     return
         # add the movie's showing time
@@ -381,16 +390,16 @@ def add_movie():
             minutes_after_midnight = error_checker(data_type="time")
 
             # confirm if the movie time is correct
-            ask = True
-            while ask == True:
+            ask_user = True
+            while ask_user == True:
                 print(f"Are you sure that {movie_name} will be shown at {print_time(minutes_after_midnight)}? (1 to confirm, 2 to change the time, 3 to cancel addition)")
-                # either advance the user, reask the quesiton, or end the program depending on what the user inputs
+                # either advance the user, reask_user the quesiton, or end the program depending on what the user inputs
                 confirm = input()
                 if confirm == "1":
                     run = False
-                    ask = False
+                    ask_user = False
                 elif confirm == "2":
-                    ask = False
+                    ask_user = False
                 elif confirm == "3":
                     return
 
